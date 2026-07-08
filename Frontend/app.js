@@ -1,7 +1,7 @@
 // ⚠️ CRITICAL HACKATHON STEP: 
 // Replace the URL below with your ACTUAL Render backend URL!
 // It should look something like "https://epc-causal-twin-api.onrender.com"
-const BACKEND_URL = "YOUR_RENDER_URL_GOES_HERE"; 
+const BACKEND_URL = "https://apdc-api.onrender.com/"; 
 
 async function fetchTwinData() {
     const twinDisplay = document.getElementById('twin-data');
