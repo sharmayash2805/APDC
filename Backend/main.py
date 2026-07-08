@@ -16,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/view-twin")
+def read_twin():
+    return {"message": "Digital Twin Data Loaded", "nodes": 5, "edges": 3}
+
 # 1. Configure the AI 
 api_key = os.environ.get("GEMINI_API_KEY")
 if api_key:
