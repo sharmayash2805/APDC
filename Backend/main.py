@@ -1,39 +1,67 @@
 from fastapi import FastAPI
 from processor import extract_text_from_pdfs
 import google.generativeai as genai
+import networkx as nx
 import os
 
 # Initialize the API
 app = FastAPI()
 
-# Configure the AI using an environment variable (secure!)
+# 1. Configure the AI 
 api_key = os.environ.get("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
+
+# 2. Configure the Graph (Causal Digital Twin Spine)
+twin_graph = nx.DiGraph()
+entities = ["PowerTech Inc.", "Backup Generator A", "Install-Task", "System Testing"]
+twin_graph.add_nodes_from(entities)
+causal_relationships = [
+    ("PowerTech Inc.", "Backup Generator A"),  
+    ("Backup Generator A", "Install-Task"),    
+    ("Install-Task", "System Testing")         
+]
+twin_graph.add_edges_from(causal_relationships)
+
+# --- API ENDPOINTS ---
 
 @app.get("/")
 def home():
     return {"message": "Causal Digital Twin Backend is Live!"}
 
+@app.get("/view-twin")
+def view_twin():
+    """Returns the in-memory graph structure"""
+    return {
+        "nodes": list(twin_graph.nodes()),
+        "edges": list(twin_graph.edges())
+    }
+
+@app.get("/simulate-delay/{node_name}")
+def simulate_delay(node_name: str):
+    """Traces the Domino Effect of a delay"""
+    if node_name not in twin_graph:
+        return {"error": f"Entity '{node_name}' not found in the Digital Twin."}
+    
+    impacted_nodes = list(nx.descendants(twin_graph, node_name))
+    return {
+        "delayed_entity": node_name,
+        "downstream_impact": impacted_nodes,
+        "warning": f"Delaying {node_name} will impact {len(impacted_nodes)} subsequent steps."
+    }
+
 @app.get("/analyze")
 def analyze_data():
-    """
-    1. Extracts text from PDFs
-    2. Sends to AI for causal analysis
-    3. Returns the insights
-    """
-    # Step 1: Extract the data using the script you already wrote!
+    """Extracts PDFs and uses Gemini to analyze causal impacts"""
     docs = extract_text_from_pdfs()
     
     if "error" in docs:
         return {"error": docs["error"]}
 
-    # Step 2: Combine all the document text into one big string
     combined_text = ""
     for filename, text in docs.items():
         combined_text += f"\n--- {filename} ---\n{text}\n"
 
-    # Step 3: The "Causal AI" Prompt
     prompt = f"""
     You are a Causal AI Digital Twin for an EPC Supply Chain. 
     Review the following extracted project documents and identify the causal chain of events.
@@ -44,7 +72,6 @@ def analyze_data():
     {combined_text}
     """
 
-    # Step 4: Ask the AI
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
