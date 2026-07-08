@@ -1,1 +1,4 @@
 PyMuPDF==1.23.8
+fastapi==0.104.1
+uvicorn==0.24.0.post1
+google-generativeai==0.3.1
