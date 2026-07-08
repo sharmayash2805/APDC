@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPC Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8 font-sans">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">Data Centre EPC Intelligence Platform</h1>
+            <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded">Hackathon MVP Live</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Project Health Status</h2>
+                <div class="text-5xl font-extrabold text-green-500" id="health-score">--</div>
+                <p class="text-gray-500 mt-2" id="health-status">Connecting to Causal Digital Twin...</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">AI Domino Effect Alerts</h2>
+                <ul id="alerts-list" class="text-red-600 font-medium space-y-3">
+                    <li class="flex items-center text-gray-400">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        Awaiting Backend Data...
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm mt-6 border border-gray-100">
+            <h2 class="text-xl font-semibold mb-2 text-gray-700">Knowledge Graph View (Nodes & Edges)</h2>
+            <p class="text-sm text-gray-500 mb-4">Live data feed from NetworkX memory.</p>
+            <pre id="twin-data" class="bg-slate-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm shadow-inner">Fetching graph data from Render...</pre>
+            <button onclick="fetchTwinData()" class="mt-4 bg-slate-800 text-white px-5 py-2 rounded shadow hover:bg-slate-700 transition">Run AI Simulation</button>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
