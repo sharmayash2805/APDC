@@ -3,9 +3,18 @@ from processor import extract_text_from_pdfs
 import google.generativeai as genai
 import networkx as nx
 import os
+from fastapi.middleware.cors import CORSMiddleware # Add this import!
 
 # Initialize the API
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (perfect for hackathons)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 1. Configure the AI 
 api_key = os.environ.get("GEMINI_API_KEY")
