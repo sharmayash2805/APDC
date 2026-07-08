@@ -3,29 +3,26 @@ from processor import extract_text_from_pdfs
 import google.generativeai as genai
 import networkx as nx
 import os
-from fastapi.middleware.cors import CORSMiddleware # Add this import!
+from fastapi.middleware.cors import CORSMiddleware
 
 # Initialize the API
 app = FastAPI()
 
+# 1. Configure CORS (Crucial for Vercel <-> Render connection)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins (perfect for hackathons)
+    allow_origins=["*"],  # Allows all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/view-twin")
-def read_twin():
-    return {"message": "Digital Twin Data Loaded", "nodes": 5, "edges": 3}
-
-# 1. Configure the AI 
+# 2. Configure the AI 
 api_key = os.environ.get("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
 
-# 2. Configure the Graph (Causal Digital Twin Spine)
+# 3. Configure the Graph (Causal Digital Twin Spine)
 twin_graph = nx.DiGraph()
 entities = ["PowerTech Inc.", "Backup Generator A", "Install-Task", "System Testing"]
 twin_graph.add_nodes_from(entities)
@@ -42,6 +39,7 @@ twin_graph.add_edges_from(causal_relationships)
 def home():
     return {"message": "Causal Digital Twin Backend is Live!"}
 
+# ONLY ONE DEFINITION OF /view-twin
 @app.get("/view-twin")
 def view_twin():
     """Returns the in-memory graph structure"""
